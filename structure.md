@@ -29,6 +29,43 @@
         box-model.md
         display.md
         positioning.md
+      /properties
+        /typography
+          font.md
+          text.md
+          line-height.md
+          letter-spacing.md
+        /colors-and-backgrounds
+          color.md
+          background.md
+          gradients.md
+        /spacing
+          margin.md
+          padding.md
+        /sizing
+          width-height.md
+          min-max.md
+          aspect-ratio.md
+        /borders
+          border.md
+          border-radius.md
+          outline.md
+        /visibility
+          visibility.md
+          opacity.md
+          overflow.md
+        /positioning-helpers
+          z-index.md
+          top-left.md
+        /interaction
+          cursor.md
+          pointer-events.md
+          user-select.md
+        /lists
+          list-style.md
+        /tables
+          table-layout.md
+          border-collapse.md
       /layout
         flexbox.md
         grid.md
