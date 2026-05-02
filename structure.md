@@ -32,9 +32,6 @@
       /properties
         /typography
           font.md
-          text.md
-          line-height.md
-          letter-spacing.md
         /colors-and-backgrounds
           color.md
           background.md
