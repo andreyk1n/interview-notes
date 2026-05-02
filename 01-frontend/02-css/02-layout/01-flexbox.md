@@ -11,6 +11,16 @@
 
 ---
 
+## Як мислити Flexbox
+
+Flexbox — це не про "ставити блоки", а про:
+
+* **розподіл простору**
+* **вирівнювання**
+* **адаптивність без медіа-запитів**
+
+---
+
 ## Основні поняття
 
 ### Flex Container
@@ -21,6 +31,10 @@
 }
 ```
 
+Активує flex-контекст
+
+---
+
 ### Flex Items
 
 ```html
@@ -30,19 +44,27 @@
 </div>
 ```
 
-Тільки **прямі діти** стають flex-елементами.
+Тільки **прямі діти** стають flex-елементами
 
 ---
 
-## Осі (Axes)
+## Осі (дуже важливо!)
 
-### Main axis (головна вісь)
+90% помилок = нерозуміння осей
 
-Напрямок елементів.
+### flex-direction: row
 
-### Cross axis (перпендикулярна вісь)
+```text
+Main axis → →
+Cross axis ↓
+```
 
-Поперечна вісь.
+### flex-direction: column
+
+```text
+Main axis ↓
+Cross axis → →
+```
 
 ---
 
@@ -54,37 +76,44 @@
 }
 ```
 
-| Значення | Опис |
-|----------|------|
-| row | зліва → направо |
-| row-reverse | справа → наліво |
-| column | зверху → вниз |
-| column-reverse | знизу → вверх |
+Змінює ВСЮ логіку:
 
-Змінює main axis.
+* justify-content → по main axis
+* align-items → по cross axis
 
 ---
 
-## justify-content (по main axis)
+## justify-content (розподіл по головній осі)
 
 ```css
 .container {
-    justify-content: center;
+    justify-content: space-between;
 }
 ```
 
-| Значення | Опис |
-|----------|------|
-| flex-start | початок |
-| flex-end | кінець |
-| center | центр |
-| space-between | між |
-| space-around | навколо |
-| space-evenly | рівномірно |
+### Візуально:
+
+```text
+flex-start:    [A B C]
+center:        [  A B C  ]
+flex-end:      [      A B C]
+space-between: [A   B   C]
+space-around:  [ A  B  C ]
+space-evenly:  [ A B C ]
+```
+
+### Практичний кейс: navbar
+
+```css
+.nav {
+    display: flex;
+    justify-content: space-between;
+}
+```
 
 ---
 
-## align-items (по cross axis)
+## align-items (вирівнювання по поперечній осі)
 
 ```css
 .container {
@@ -92,25 +121,37 @@
 }
 ```
 
-| Значення | Опис |
-|----------|------|
-| stretch | розтягнути (default) |
-| flex-start | зверху |
-| flex-end | знизу |
-| center | центр |
-| baseline | по тексту |
+### Важливий нюанс
+
+```css
+align-items: stretch; /* default */
+```
+
+Елементи розтягуються по висоті
+
+### baseline
+
+```css
+align-items: baseline;
+```
+
+Вирівнює по тексту, а не по коробках
 
 ---
 
-## align-content (для кількох рядків)
+## align-content (часто плутають!)
 
 ```css
 .container {
+    flex-wrap: wrap;
     align-content: space-between;
 }
 ```
 
-Працює тільки з `flex-wrap`.
+Працює ТІЛЬКИ коли:
+
+* є кілька рядків
+* є `flex-wrap`
 
 ---
 
@@ -122,29 +163,52 @@
 }
 ```
 
-| Значення | Опис |
-|----------|------|
-| nowrap | в один рядок |
-| wrap | перенос |
-| wrap-reverse | знизу вверх |
-
----
-
-## gap
+### Приклад
 
 ```css
 .container {
-    gap: 10px;
+    display: flex;
+    width: 300px;
+}
+
+.item {
+    width: 200px;
 }
 ```
 
-Відступи між елементами.
+Без wrap:
+
+```text
+[A B] (overflow)
+```
+
+З wrap:
+
+```text
+[A]
+[B]
+```
 
 ---
 
-## Властивості елементів (items)
+## gap (краще ніж margin)
 
-### flex-grow
+```css
+.container {
+    gap: 16px;
+}
+```
+
+Плюси:
+
+* не ламає layout
+* працює і по вертикалі, і по горизонталі
+
+---
+
+## Flex items (глибше)
+
+### flex-grow (розширення)
 
 ```css
 .item {
@@ -152,11 +216,24 @@
 }
 ```
 
-Розтягується.
+**Приклад:**
+
+```css
+.item:nth-child(1) { flex-grow: 1; }
+.item:nth-child(2) { flex-grow: 2; }
+```
+
+Результат:
+
+```text
+[ A ][    B    ]
+```
+
+B займає в 2 рази більше
 
 ---
 
-### flex-shrink
+### flex-shrink (стискання)
 
 ```css
 .item {
@@ -164,11 +241,19 @@
 }
 ```
 
-Стискається.
+**Приклад:**
+
+```css
+.item {
+    width: 300px;
+}
+```
+
+Контейнер 500px → елементи стискаються
 
 ---
 
-### flex-basis
+### flex-basis (база)
 
 ```css
 .item {
@@ -176,45 +261,66 @@
 }
 ```
 
-Початковий розмір.
+Це **стартовий розмір**, до grow/shrink
 
 ---
 
-### flex (shorthand)
+## flex shorthand (критично важливо)
 
 ```css
 .item {
-    flex: 1 1 200px;
+    flex: 1;
 }
+```
+
+Дорівнює:
+
+```css
+flex: 1 1 0;
+```
+
+Найчастіше питання на співбесіді
+
+### Варіанти
+
+```css
+flex: 0 0 auto; /* фікс */
+flex: 1;        /* рівномірно */
+flex: 2;        /* більше місця */
 ```
 
 ---
 
-### order
+## order
 
 ```css
 .item {
-    order: 2;
+    order: 1;
 }
 ```
 
-Змінює порядок.
+**Важливо:**
+
+* Впливає тільки на візуальний порядок
+* НЕ змінює DOM
 
 ---
 
-### align-self
+## align-self
 
 ```css
 .item {
-    align-self: center;
+    align-self: flex-end;
 }
 ```
 
-Override align-items.
+Override контейнера
 
 ---
 
-### Auto margins (магія)
+## Auto margins — найсильніший трюк
+
+### Push вправо
 
 ```css
 .item {
@@ -222,13 +328,21 @@ Override align-items.
 }
 ```
 
-Push вправо.
+### Центрування
+
+```css
+.item {
+    margin: auto;
+}
+```
+
+Працює навіть без justify/align
 
 ---
 
-## Приклади
+## Практичні приклади
 
-### Центрування
+### 1. Центрування (найчастіше)
 
 ```css
 .container {
@@ -238,16 +352,60 @@ Push вправо.
 }
 ```
 
-### Space between
+### 2. Sticky footer
+
+```css
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main {
+    flex: 1;
+}
+```
+
+### 3. Navbar + логотип + меню
+
+```css
+.nav {
+    display: flex;
+    align-items: center;
+}
+
+.menu {
+    margin-left: auto;
+}
+```
+
+### 4. Cards grid (простий)
 
 ```css
 .container {
     display: flex;
-    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.card {
+    flex: 1 1 300px;
 }
 ```
 
-### Sidebar layout
+### 5. Equal height columns
+
+```css
+.container {
+    display: flex;
+}
+
+.item {
+    flex: 1;
+}
+```
+
+### 6. Holy Grail layout
 
 ```css
 .container {
@@ -255,7 +413,7 @@ Push вправо.
 }
 
 .sidebar {
-    width: 250px;
+    width: 200px;
 }
 
 .content {
@@ -265,44 +423,84 @@ Push вправо.
 
 ---
 
-## Flex vs Grid
+## Flexbox + overflow
 
-| Flex | Grid |
-|------|------|
-| 1D | 2D |
-| прості layout | складні layout |
+```css
+.container {
+    display: flex;
+    overflow-x: auto;
+}
+```
+
+Горизонтальний скрол
+
+---
+
+## Min-width bug (часта пастка)
+
+```css
+.item {
+    min-width: 0;
+}
+```
+
+Потрібно для:
+
+* text overflow
+* flex shrink
+
+---
+
+## Flex vs Grid (глибше)
+
+| Flex             | Grid             |
+| ---------------- | ---------------- |
+| 1D               | 2D               |
+| контент → layout | layout → контент |
+| простий          | складний         |
 
 ---
 
 ## Часті питання на співбесіді
 
-* Що таке flexbox?
-* Main axis vs cross axis?
-* justify-content vs align-items?
-* flex-grow vs flex-basis?
-* Flex vs grid?
+* Що робить `flex: 1`?
+* flex-basis vs width?
+* justify vs align?
+* чому не працює align-content?
+* як працює auto margin?
+* що таке main axis?
 
 ---
 
 ## Часті помилки
 
-* Плутають осі
-* Використовують align-content без wrap
-* Не розуміють flex: 1
-* Margin замість gap
+* плутають осі
+* не використовують gap
+* не розуміють flex-basis
+* забувають про wrap
+* не знають про min-width: 0
 
 ---
 
 ## Best Practices
 
-* Використовувати для layout
-* Використовувати gap
-* Не зловживати order
-* Комбінувати з grid
+* використовувати flex для layout
+* використовувати gap замість margin
+* уникати складних вкладеностей
+* комбінувати з grid
+* думати через осі
 
 ---
 
 ## Висновок
 
-Flexbox — гнучкий layout, простий для більшості задач і основа сучасної верстки.
+Flexbox:
+
+* дає контроль над простором
+* спрощує адаптивність
+* закриває 80% layout задач
+
+Must-have для frontend
+
+---
 
