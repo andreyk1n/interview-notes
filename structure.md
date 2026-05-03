@@ -44,9 +44,7 @@
           min-max.md
           aspect-ratio.md
         /borders
-          border.md
-          border-radius.md
-          outline.md
+          borders.md
         /visibility
           visibility.md
           opacity.md
